@@ -174,3 +174,35 @@ export const generateKeyframes = (springs, { time = 1 } = {}) => {
 
   return keyframesString
 }
+
+export const generateValues = (springs, { time = 1 } = {}) => {
+  const otherSprings = springs.filter(
+      s => !transformProperties.includes(s.property)
+  )
+
+  const transformSprings = springs.filter(s =>
+      transformProperties.includes(s.property)
+  )
+
+  let keyframes = [];
+  for (let i = 0; i <= 100; i++) {
+    if (transformSprings.length > 0) {
+      for (let j = 0; j < transformSprings.length; j++) {
+        const {unit = ''} = transformSprings[j]
+
+        const t = (i * time) / 100
+        const springValue = getSpringValue({
+          ...transformSprings[j],
+          t
+        })
+
+        keyframes.push({
+          value: springValue,
+          unit: unit,
+        })
+      }
+    }
+  }
+
+  return keyframes
+}
